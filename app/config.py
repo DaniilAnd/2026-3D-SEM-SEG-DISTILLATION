@@ -9,8 +9,7 @@ DEFAULT_POINT_SIZE = 2
 ACCUMULATION_STEP = 3
 
 ACCUMULATION_STRATEGIES = {
-    'default': 'Simple concatenation (no registration)',
-    'greedy_grid': 'Greedy Grid registration-based alignment'
+    'default': 'Simple concatenation (no registration)'
 }
 
 # Excluded segment classes (non-dynamic objects)

@@ -13,7 +13,6 @@ from src.datasets.waymo.pointcept_dataset import PointceptDataset
 from src.accumulation.point_cloud_accumulator import PointCloudAccumulator
 from src.accumulation.accumulation_strategy import AccumulationStrategy
 from src.accumulation.default_accumulator_strategy import DefaultAccumulatorStrategy
-from src.accumulation.greedy_grid_accumulator_strategy import GreedyGridAccumulatorStrategy
 from app.config import ACCUMULATION_STEP
 
 
@@ -25,7 +24,7 @@ class PatchingService:
 
         Args:
             dataset: PointceptDataset instance
-            strategy: Accumulation strategy name ('default' or 'greedy_grid')
+            strategy: Accumulation strategy name ('default')
         """
         self.dataset = dataset
         self.strategy = self._get_strategy(strategy)
@@ -40,8 +39,6 @@ class PatchingService:
         Returns:
             AccumulationStrategy instance
         """
-        if strategy_name == 'greedy_grid':
-            return GreedyGridAccumulatorStrategy()
         return DefaultAccumulatorStrategy()
 
     def patch_frame(self,

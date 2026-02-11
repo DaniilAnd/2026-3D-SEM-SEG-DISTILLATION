@@ -112,6 +112,9 @@ def get_frame_instances(data_root: str,
                         excluded_classes: Tuple[int, ...] = None) -> Dict[int, int]:
     """Get instances in a frame with their point counts.
 
+    Uses grouped_instances to find which instances are present in this frame,
+    then gets point counts from segment data.
+
     Args:
         data_root: Root directory of the dataset
         scene_id: Scene identifier
@@ -124,13 +127,27 @@ def get_frame_instances(data_root: str,
     if excluded_classes is None:
         excluded_classes = tuple(EXCLUDED_SEGMENT_CLASSES)
 
+    # Get grouped instances for the scene
+    grouped = group_instances_for_scene(data_root, scene_id)
+
+    # Find instances that appear in this frame
+    frame_instance_ids = set()
+    for instance_id, frame_ids in grouped.items():
+        if frame_id in frame_ids:
+            frame_instance_ids.add(int(instance_id))
+
+    # Get point counts from segments
     segments = get_frame_segments(data_root, scene_id, frame_id)
     unique_ids, counts = np.unique(segments, return_counts=True)
+    segment_counts = {int(uid): int(cnt) for uid, cnt in zip(unique_ids, counts)}
 
+    # Build result: only instances present in this frame (from grouped_instances)
     instances = {}
-    for uid, count in zip(unique_ids, counts):
-        if int(uid) not in excluded_classes:
-            instances[int(uid)] = int(count)
+    for instance_id in frame_instance_ids:
+        if instance_id not in excluded_classes:
+            # Use segment count if available, otherwise estimate
+            point_count = segment_counts.get(instance_id, 0)
+            instances[instance_id] = point_count
 
     return instances
 
