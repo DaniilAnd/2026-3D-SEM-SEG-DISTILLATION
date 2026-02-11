@@ -1,5 +1,9 @@
 numpy==1.25.2
-nuscenes-devkit==1.1.10
+# nuscenes-devkit==1.1.10
 open3d==0.16.1
 pyquaternion==0.9.9
 tqdm==4.66.1
+
+# Streamlit app dependencies
+streamlit>=1.28.0
+plotly>=5.17.0
